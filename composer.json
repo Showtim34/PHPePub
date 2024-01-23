@@ -1,21 +1,21 @@
 {
-    "name": "grandt/phpepub",
+    "name": "Showtim34/PHPePub",
     "type": "library",
-    "description": "Package to create and stream e-books in the ePub 2.0 and 3.0 formats.",
+    "description": "Package to create and stream e-books in the ePub 2.0 and 3.0 formats. forked from Grandt/PHPePub https://github.com/Grandt/PHPePub",
     "keywords": ["epub", "e-book"],
-    "homepage": "https://github.com/Grandt/PHPZip",
+    "homepage": "https://github.com/Showtim34/PHPePub",
     "license": "LGPL-2.1",
     "minimum-stability": "stable",
     "authors": [
         {
-            "name": "A. Grandt",
+            "name": "Showtim34",
             "email": "php@grandt.com",
             "homepage": "http://grandt.com",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=7.1.0",
         "phpzip/phpzip": "~2.0.7",
         "grandt/phpresizegif": "~1.0.3",
         "grandt/relativepath": "~1.0.1"
