@@ -137,26 +137,22 @@ class EPubChapterSplitter {
                     }
                 }
 
-                if ($curSize > 0 && ($doSplit || (!$splitOnSearchString && $curSize + $nodeLen > $partSize))) {
-                    $curFile = $xmlDoc->createDocumentFragment();
-                    $files[] = $curFile;
-                    $curParent = $curFile;
-                    if ($domDepth > 0) {
-                        reset($domPath);
-                        reset($domClonedPath);
-                        $oneDomClonedPath = each($domClonedPath);
-                        while ($oneDomClonedPath) {
-                            /** @noinspection PhpUnusedLocalVariableInspection */
-                            list($k, $v) = $oneDomClonedPath;
-                            /** @var $v \DOMNode */
-                            $newParent = $v->cloneNode(false);
-                            $curParent->appendChild($newParent);
-                            $curParent = $newParent;
-                            $oneDomClonedPath = each($domClonedPath);
-                        }
-                    }
-                    $curSize = strlen($xmlDoc->saveXML($curFile));
-                }
+if ($curSize > 0 && ($doSplit || (!$splitOnSearchString && $curSize + $nodeLen > $partSize))) {
+    $curFile = $xmlDoc->createDocumentFragment();
+    $files[] = $curFile;
+    $curParent = $curFile;
+    if ($domDepth > 0) {
+        reset($domPath);
+        foreach ($domClonedPath as $k => $v) {
+            /** @var $v \DOMNode */
+            $newParent = $v->cloneNode(false);
+            $curParent->appendChild($newParent);
+            $curParent = $newParent;
+        }
+    }
+    $curSize = strlen($xmlDoc->saveXML($curFile));
+}
+
                 $curParent->appendChild($node->cloneNode(true));
                 $curSize += $nodeLen;
             }

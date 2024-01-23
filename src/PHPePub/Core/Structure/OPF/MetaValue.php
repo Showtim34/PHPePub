@@ -96,17 +96,18 @@ class MetaValue {
     function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2) {
         $dc = "\t\t<" . $this->tagName;
 
-        if (sizeof($this->attr) > 0) {
-            while (list($name, $content) = each($this->attr)) {
-                $dc .= " " . $name . "=\"" . $content . "\"";
-            }
-        }
+if (sizeof($this->attr) > 0) {
+    foreach ($this->attr as $name => $content) {
+        $dc .= " " . $name . "=\"" . $content . "\"";
+    }
+}
 
-        if ($bookVersion === EPub::BOOK_VERSION_EPUB2 && sizeof($this->opfAttr) > 0) {
-            while (list($name, $content) = each($this->opfAttr)) {
-                $dc .= " opf:" . $name . "=\"" . $content . "\"";
-            }
-        }
+if ($bookVersion === EPub::BOOK_VERSION_EPUB2 && sizeof($this->opfAttr) > 0) {
+    foreach ($this->opfAttr as $name => $content) {
+        $dc .= " opf:" . $name . "=\"" . $content . "\"";
+    }
+}
+
 
         return $dc . ">" . $this->tagValue . "</" . $this->tagName . ">\n";
     }

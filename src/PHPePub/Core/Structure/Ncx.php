@@ -290,12 +290,14 @@ class Ncx {
             . "\t\t<meta name=\"dtb:totalPageCount\" content=\"0\" />\n"
             . "\t\t<meta name=\"dtb:maxPageNumber\" content=\"0\" />\n";
 
-        if (sizeof($this->meta)) {
-            foreach ($this->meta as $metaEntry) {
-                list($name, $content) = each($metaEntry);
-                $ncx .= "\t\t<meta name=\"" . $name . "\" content=\"" . $content . "\" />\n";
-            }
+if (sizeof($this->meta)) {
+    foreach ($this->meta as $metaEntry) {
+        foreach ($metaEntry as $name => $content) {
+            $ncx .= "\t\t<meta name=\"" . $name . "\" content=\"" . $content . "\" />\n";
         }
+    }
+}
+
 
         $ncx .= "\t</head>\n\n\t<docTitle>\n\t\t<text>"
             . $this->docTitle
@@ -350,54 +352,56 @@ class Ncx {
      *
      * @return string
      */
-    function finalizeReferences() {
-        if (isset($this->referencesList) && sizeof($this->referencesList) > 0) {
-            $this->rootLevel();
-            $this->subLevel($this->referencesTitle, $this->referencesId, $this->referencesClass);
-            $refId = 1;
-            while (list($item, $descriptive) = each($this->referencesOrder)) {
-                if (array_key_exists($item, $this->referencesList)) {
-                    $name = (empty($this->referencesName[$item]) ? $descriptive : $this->referencesName[$item]);
-                    $navPoint = new NavPoint($name, $this->referencesList[$item], "ref-" . $refId++);
-                    $this->addNavPoint($navPoint);
-                }
+function finalizeReferences() {
+    if (isset($this->referencesList) && sizeof($this->referencesList) > 0) {
+        $this->rootLevel();
+        $this->subLevel($this->referencesTitle, $this->referencesId, $this->referencesClass);
+        $refId = 1;
+        foreach ($this->referencesOrder as $item => $descriptive) {
+            if (array_key_exists($item, $this->referencesList)) {
+                $name = (empty($this->referencesName[$item]) ? $descriptive : $this->referencesName[$item]);
+                $navPoint = new NavPoint($name, $this->referencesList[$item], "ref-" . $refId++);
+                $this->addNavPoint($navPoint);
             }
         }
     }
+}
+
 
     /**
      * Build the landmarks for the ePub 3 toc.
      *
      * @return string
      */
-    function finalizeEPub3Landmarks() {
-        $lm = "";
-        if (isset($this->referencesList) && sizeof($this->referencesList) > 0) {
-            $lm = "\t\t\t<nav epub:type=\"landmarks\">\n"
-                . "\t\t\t\t<h2"
-                . ($this->writingDirection === EPub::DIRECTION_RIGHT_TO_LEFT ? " dir=\"rtl\"" : "") . ">"
-                . $this->referencesTitle . "</h2>\n"
-                . "\t\t\t\t<ol>\n";
+function finalizeEPub3Landmarks() {
+    $lm = "";
+    if (isset($this->referencesList) && sizeof($this->referencesList) > 0) {
+        $lm = "\t\t\t<nav epub:type=\"landmarks\">\n"
+            . "\t\t\t\t<h2"
+            . ($this->writingDirection === EPub::DIRECTION_RIGHT_TO_LEFT ? " dir=\"rtl\"" : "") . ">"
+            . $this->referencesTitle . "</h2>\n"
+            . "\t\t\t\t<ol>\n";
 
-            $li = "";
-            while (list($item, $descriptive) = each($this->referencesOrder)) {
-                if (array_key_exists($item, $this->referencesList)) {
-                    $li .= "\t\t\t\t\t<li><a epub:type=\""
-                        . $item
-                        . "\" href=\"" . $this->referencesList[$item] . "\">"
-                        . (empty($this->referencesName[$item]) ? $descriptive : $this->referencesName[$item])
-                        . "</a></li>\n";
-                }
+        $li = "";
+        foreach ($this->referencesOrder as $item => $descriptive) {
+            if (array_key_exists($item, $this->referencesList)) {
+                $li .= "\t\t\t\t\t<li><a epub:type=\""
+                    . $item
+                    . "\" href=\"" . $this->referencesList[$item] . "\">"
+                    . (empty($this->referencesName[$item]) ? $descriptive : $this->referencesName[$item])
+                    . "</a></li>\n";
             }
-            if (empty($li)) {
-                return "";
-            }
-
-            $lm .= $li
-                . "\t\t\t\t</ol>\n"
-                . "\t\t\t</nav>\n";
+        }
+        if (empty($li)) {
+            return "";
         }
 
-        return $lm;
+        $lm .= $li
+            . "\t\t\t\t</ol>\n"
+            . "\t\t\t</nav>\n";
     }
+
+    return $lm;
+}
+
 }
