@@ -1,4 +1,4 @@
-# PHP ePub generator
+# PHP ePub generator php7 - php8 compatible
 
 forked from Grandt/PHPePub https://github.com/Grandt/PHPePub
 
